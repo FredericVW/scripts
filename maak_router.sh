@@ -12,8 +12,9 @@ sysctl -p
 echo "------"
 read -p "Bevestig hierna twee maal met Yes." VAR
 apt install iptables-persistent
-iptables -t nat -A POSTROUTING -j MASQUERADE
-iptables -t nat -I PREROUTING -p tcp -i ens33 --dport 220 -j DNAT --to-destination 192.168.15.20:22
+OUT_ADAPTER=ens33
+iptables -t nat -A POSTROUTING -o $OUT_ADAPTER -j MASQUERADE
+iptables -t nat -I PREROUTING -p tcp -i $OUT_ADAPTER --dport 220 -j DNAT --to-destination 192.168.15.20:22
 ip a
-iptables -t nat -I PREROUTING -p tcp -i ens33 --dport 229 -j DNAT --to-destination 192.168.15.129:22
+iptables -t nat -I PREROUTING -p tcp -i $OUT_ADAPTER --dport 229 -j DNAT --to-destination 192.168.15.129:22
 iptables-save > /etc/iptables/rules.v4
